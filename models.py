@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean, create_engine
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -11,6 +11,7 @@ class Driver(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(25), nullable=False)
     car = Column(String(25), nullable=False)
+
     def __repr__(self):
         return f"id: {self.id}, name: {self.name}, car: {self.car}"
 
@@ -20,6 +21,7 @@ class Client(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
     is_vip = Column(Boolean, nullable=False)
+
     def __repr__(self):
         return f"id: {self.id}, name: {self.name}, is_vip: {self.is_vip}"
 
@@ -35,6 +37,7 @@ class Order(Base):
     status = Column(String(25), comment="Статус")
     clients = relationship("Client", foreign_keys=[client_id])
     drivers = relationship("Driver", foreign_keys=[driver_id])
+
     def __repr__(self):
         return f"id: {self.id}, address_from: {self.address_from}, address_to: {self.address_to}, " \
                f"client_id: {self.client_id}, driver_id: {self.driver_id}, date_created: {self.date_created}," \
