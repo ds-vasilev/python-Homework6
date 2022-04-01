@@ -38,16 +38,16 @@ def post_driver() -> Response:
 @app.route('/api/v1/drivers', methods=['GET'])
 def get_driver() -> Response:
     with session_scope() as session:
-        data = request.args.get("driverId")
-        driver_info = session.query(Driver).filter(Driver.id == int(data)).all()
-        return Response(str(driver_info), status=200)
+        driver_id = request.args.get("driverId")
+        o = session.query(Order).get(driver_id)
+        return Response(str(o), status=200)
 
 
 @app.route('/api/v1/drivers', methods=['DELETE'])
 def delete_driver() -> Response:
     with session_scope() as session:
-        data = request.args.get("driverId")
-        session.query(Driver).filter(Driver.id == int(data)).delete()
+        driver_id = request.args.get("driverId")
+        session.query(Driver).filter(Driver.id == int(driver_id)).delete()
         return Response("delete", status=204)
 
 
@@ -66,9 +66,9 @@ def post_clients() -> Response:
 @app.route('/api/v1/clients', methods=['GET'])
 def get_clients() -> Response:
     with session_scope() as session:
-        data = request.args.get("clientId")
-        client_info = session.query(Client).filter(Client.id == int(data)).all()
-        return Response(str(client_info), status=200)
+        client_Id = request.args.get("clientId")
+        o = session.query(Order).get(client_Id)
+        return Response(str(o), status=200)
 
 
 @app.route('/api/v1/clients', methods=['DELETE'])
@@ -105,7 +105,6 @@ def get_orders() -> Response:
     with session_scope() as session:
         data = request.args.get("orderId")
         print(data, type(data))
-
         order_info = session.query(Order).filter(Order.id == int(data)).all()
         return Response(str(order_info), status=200)
 
@@ -125,6 +124,7 @@ def change_orders() -> Response:
         data_json = request.get_json()
         if data_json["status"] in statuses[o.status]:
             o.status = data_json["status"]                                                                  # Как надо
+            o.date_created = data_json["date_created"]
             # session.query(Order).filter(Order.id == int(order_id)).update({"status": data_json["status"]})  # Как было
             return Response("Заказ изменен", status=200)
         else:
